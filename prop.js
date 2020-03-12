@@ -430,6 +430,22 @@ define(["qlik", "jquery"], function(qlik, $) {
 						type: "items",
 						label: "Header/Data Settings",
 						items: {
+							//edit on, 05.03.2020-1. Add button to hide all header
+							showHeader: {
+								type: "boolean",
+								component: "switch",
+								label: "Show Header",
+								ref: "showHeader",
+								options: [{
+									value: true,
+									label: "Show"
+								}, {
+									value: false,
+									label: "Hide"
+								}],
+								defaultValue: true
+							},							
+							//edit off
 							customWidth: {
 								type: "boolean",
 								component: "switch",
@@ -568,6 +584,17 @@ define(["qlik", "jquery"], function(qlik, $) {
 									return d.DefaultTotalStyle;
 								}
 							},
+							//edit on, 05.03.2020-2. Add new edited variable instead of word 'total'
+							TotalStringValue: {
+								label: "Total String Value",
+								type: "string",
+								ref: "TotalStrVal",
+								defaultValue: "Total",
+								show: function(d) {
+									return d.DefaultTotalStyle;
+								}	
+							},		
+							//edit off
 							TotalBgColor: {
 								label: "Total Background Color",
 								type: "string",
@@ -595,6 +622,48 @@ define(["qlik", "jquery"], function(qlik, $) {
 									return d.DefaultTotalStyle;
 								}
 							},
+							//edit on, 15.03.2020 Add two align selectors for total section
+							TotalDimHeaderAlign: {
+								type: "string",
+								component: "dropdown",
+								label: "Total Dimension Header Align",
+								ref: "TotalDimHeaderAlign",
+								options: [{
+									value: "left",
+									label: "Left"
+								}, {
+									value: "right",
+									label: "Right"
+								}, {
+									value: "center",
+									label: "Center"
+								}],
+								defaultValue: "center",
+								show: function(d) {
+									return d.DefaultTotalStyle;
+								}
+							},						
+							TotalMesHeaderAlign: {
+								type: "string",
+								component: "dropdown",
+								label: "Total Measure Header Align",
+								ref: "TotalMesHeaderAlign",
+								options: [{
+									value: "left",
+									label: "Left"
+								}, {
+									value: "right",
+									label: "Right"
+								}, {
+									value: "center",
+									label: "Center"
+								}],
+								defaultValue: "center",
+								show: function(d) {
+								return d.DefaultTotalStyle;
+								}								
+							},			
+							//edit off
 							tdFontsizeshow: {
 								type: "boolean",
 								component: "switch",

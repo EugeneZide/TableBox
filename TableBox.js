@@ -229,7 +229,8 @@ define(["qlik", "jquery", "./prop", "css!./style.css", "./tableHeadFixer", "./d3
 				} else {
 					sortInd = "<i style='z-index: 2;' class='icon-triangle-bottom'><i>";
 				}*/
-				//
+				// 
+				
 				html += '<td style="  font-weight:600; border: 1px solid ' + BorderColor + '; color:' + txtcolorHeader + '; background:' + backgroundcolorHeader + ';" class="sortHeader" ' + ColType + '-col="' + (ColType == 'mes' ? (dimcnt + key) : key) + '" colspan="' + colSpanHeader + '"><div sheetnav="'+SheetID+'" style="'+Headercss+'padding:' + CellPadding + '; ' + hide + ' color:' + txtcolorHeader + '; background:' + backgroundcolorHeader + '; text-align:' + HeaderAlignation + '; font-size:' + headerFontSize + 'px; ' + wraptext + '">' + sortInd + cell.qFallbackTitle + enableFilter + '</div></td>';
 			} else {
 				if (ColType == 'dim') {
@@ -290,6 +291,9 @@ define(["qlik", "jquery", "./prop", "css!./style.css", "./tableHeadFixer", "./d3
 				tableth = '',
 				enableTotal = layout.enableTotal,
 				totalAlign = layout.totalAlign,
+				//edit on, 05.03.2020-1. Add button to hide all header
+				showHeader = (layout.showHeader == undefined ? 'True' : layout.showHeader),
+				//edit off
 				header = '',
 				//headerFontSize = (layout.headerFontSize == undefined ? '14px' : layout.headerFontSize),
 				CustomHeader = '',
@@ -303,10 +307,15 @@ define(["qlik", "jquery", "./prop", "css!./style.css", "./tableHeadFixer", "./d3
 				tdfontsize = (layout.tdFontsizeshow ? layout.tdFontsize : '15');
 			//render header titles
 			header += "<tr id='thead_" + objid + "'>";
-			//Dimension Header Info
-			header += createHeader(hypercube.qDimensionInfo, layout, 'dim');
-			//Measure Header Info
-			header += createHeader(hypercube.qMeasureInfo, layout, 'mes');
+			//edit on, 05.03.2020-1. Add button to hide all header
+			if ( showHeader ) { 
+				//Dimension Header Info
+				header += createHeader(hypercube.qDimensionInfo, layout, 'dim');
+				//Measure Header Info
+				header += createHeader(hypercube.qMeasureInfo, layout, 'mes');				
+			} else {
+			}
+			//edit off
 			header += "</tr>";
 			// customHeader
 			$.each(layout.customHeader, function(key, val) {
@@ -340,15 +349,30 @@ define(["qlik", "jquery", "./prop", "css!./style.css", "./tableHeadFixer", "./d3
 					TBorderColor = "border:1px solid " + layout.BorderColor + ";",
 					TCellPadding = "padding:" + layout.TotalCellPadding + ";",
 					FontSize = "font-size:" + layout.TotalFontSize + ";",
-					FStyle = txtcolor + backgroundcolor + TCellPadding + FontSize;
+					//edit on, 15.03.2020. Add two align selectors for total section					
+					TotalDimHeaderAlign = (layout.TotalDimHeaderAlign == undefined ?  'center' : layout.TotalDimHeaderAlign), 
+					TotalMesHeaderAlign = (layout.TotalMesHeaderAlign == undefined ?  'center' : layout.TotalMesHeaderAlign), 					
+					TDHeaderAlign = "text-align:"+ TotalDimHeaderAlign + ";",
+					TMHeaderAlign = "text-align:"+ TotalMesHeaderAlign + ";",					
+					//edit off
+					FStyle =  txtcolor + backgroundcolor + TCellPadding + FontSize;
 				totalHtml += (totalAlign == "2" ? "<tfoot>" : "<thead>");
-				totalHtml += "<tr id='total_top_" + objid + "'><td style='" + txtcolor + backgroundcolor + TBorderColor + "'><div style='" + FStyle + "'>Total</div></td>";
+				//edit on, 05.03.2020-2. Add new edited variable instead of word 'total'. Changed again 15.03, not deleted for memory
+//				totalHtml += "<tr id='total_top_" + objid + "'><td style='" + txtcolor + backgroundcolor + TBorderColor + "'><div style='" + FStyle + "'>Total</div></td>";
+				//edit off
+				//edit on, 15.03.2020
+//				totalHtml += "<tr id='total_top_" + objid + "'><td style='" + txtcolor + backgroundcolor + TBorderColor + "'><div style='" + FStyle + "'><b>"+ layout.TotalStrVal +"</b></div></td>";
+				totalHtml += "<tr id='total_top_" + objid + "'><td style='" + TDHeaderAlign + txtcolor + backgroundcolor + TBorderColor + "'><div style='" + FStyle + "'><b>"+ layout.TotalStrVal +"</b></div></td>";
+				//edit off
 				//colspan='"+(dimCount)+"'
 				for (var i = 0; i < (dimCount - 1); i++) {
 					totalHtml += "<td style='font-weight:600; text-align:center; " + txtcolor + backgroundcolor + TBorderColor + "' class='dummy'><div style='" + FStyle + "'>&nbsp;</div></td>";
 				}
 				hypercube.qGrandTotalRow.forEach(function(cell) {
-					totalHtml += '<td style="font-weight:600; text-align:center; ' + txtcolor + backgroundcolor + TBorderColor + '"><div style="' + FStyle + '">' + cell.qText + '</div></td>';
+				//edit on, 15.03.2020					
+//					totalHtml += '<td style="font-weight:600; text-align:center; ' + txtcolor + backgroundcolor + TBorderColor + '"><div style="' + FStyle + '">' + cell.qText + '</div></td>';
+					totalHtml += '<td style="font-weight:600; ' + TMHeaderAlign + txtcolor + backgroundcolor + TBorderColor + '"><div style="' + FStyle + '">' + cell.qText + '</div></td>';
+				//edit off	
 				});
 				totalHtml += "</tr>";
 				totalHtml += (totalAlign == "2" ? "</tfoot>" : "</thead>");
